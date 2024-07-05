@@ -14,7 +14,7 @@
  */
 
 import { deleteFaq, fetchAllFaqsByCategory, fetchCategoryTranslations } from '../api';
-import { pushNotification } from '../utils';
+import { pushErrorNotification, pushNotification } from '../utils';
 import { addElement } from '../../../../assets/src/utils';
 
 export const handleFaqOverview = async () => {
@@ -35,7 +35,7 @@ export const handleFaqOverview = async () => {
         const onlyInactive = filterForInactive.checked;
         const onlyNew = filterForNew.checked;
 
-        const faqs = await fetchAllFaqsByCategory(categoryId, onlyInactive, onlyNew);
+        const faqs = await fetchAllFaqsByCategory(categoryId, language, onlyInactive, onlyNew);
         await populateCategoryTable(categoryId, faqs.faqs);
         const deleteFaqButtons = document.querySelectorAll('.pmf-button-delete-faq');
         const toggleStickyAllFaqs = document.querySelectorAll('.pmf-admin-faqs-all-sticky');
@@ -197,7 +197,7 @@ const saveStatus = async (categoryId, faqIds, token, checked, type) => {
       if (result.success) {
         pushNotification(result.success);
       } else {
-        console.error(result.error);
+        pushErrorNotification(result.error);
       }
     } else {
       throw new Error('Network response was not ok: ', response.text());
@@ -274,6 +274,13 @@ const populateCategoryTable = async (catgoryId, faqs) => {
     );
     row.append(
       addElement('td', { classList: 'align-middle text-center' }, [
+        addElement('a', { classList: 'btn btn-primary', href: `?action=editentry&id=${faq.id}&lang=${faq.language}` }, [
+          addElement('i', { classList: 'bi bi-pencil', 'aria-hidden': 'true' }),
+        ]),
+      ])
+    );
+    row.append(
+      addElement('td', { classList: 'align-middle text-center' }, [
         addElement('a', { classList: 'btn btn-info', href: `?action=copyentry&id=${faq.id}&lang=${faq.language}` }, [
           addElement('i', { classList: 'bi bi-copy', 'aria-hidden': 'true' }),
         ]),
@@ -285,7 +292,7 @@ const populateCategoryTable = async (catgoryId, faqs) => {
           addElement(
             'a',
             {
-              classList: 'btn btn-primary dropdown-toggle',
+              classList: 'btn btn-secondary dropdown-toggle',
               href: '#',
               role: 'button',
               id: 'dropdownAddNewTranslation',
@@ -330,8 +337,8 @@ const populateCategoryTable = async (catgoryId, faqs) => {
   });
 };
 
-const clearCategoryTable = (catgoryId) => {
-  const tableBody = document.getElementById(`tbody-category-id-${catgoryId}`);
+const clearCategoryTable = (categoryId) => {
+  const tableBody = document.getElementById(`tbody-category-id-${categoryId}`);
   tableBody.innerHTML = '';
 };
 

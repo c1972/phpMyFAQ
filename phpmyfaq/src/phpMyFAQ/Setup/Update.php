@@ -709,21 +709,6 @@ class Update extends Setup
     private function applyUpdates400Alpha3(): void
     {
         if (version_compare($this->version, '4.0.0-alpha.3', '<')) {
-            // Add Facebook crawlers to botIgnoreList
-            $this->configuration->update(['main.botIgnoreList' => 'nustcrape,webpost,GoogleBot,msnbot,crawler,scooter,
-            bravobrian,archiver,w3c,controler,wget,bot,spider,Yahoo! Slurp,htdig,gsa-crawler,AirControler,Uptime-Kuma,
-            facebookcatalog/1.0,facebookexternalhit/1.1 (+http://www.facebook.com/externalhit_uatext.php),
-            facebookexternalhit/1.1']);
-
-            // Add sender address for mail
-            $this->configuration->add('mail.noReplySenderAddress', '');
-
-            // Add allowed external media hosts
-            $this->configuration->add('records.allowedMediaHosts', 'www.youtube.com');
-
-            // New SEO feature
-            $this->configuration->add('seo.title', $this->configuration->get('main.titleFAQ'));
-            $this->configuration->add('seo.description', $this->configuration->get('main.metaDescription'));
             switch (Database::getType()) {
                 case 'mysqli':
                     $this->queries[] = sprintf(
@@ -734,6 +719,7 @@ class Update extends Setup
                             reference_language VARCHAR(5) NOT NULL,
                             title TEXT DEFAULT NULL,
                             description TEXT DEFAULT NULL,
+                            slug TEXT DEFAULT NULL,
                             created DATE NOT NULL DEFAULT CURRENT_TIMESTAMP,
                             PRIMARY KEY (id)) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ENGINE = InnoDB',
                         Database::getTablePrefix()
@@ -748,6 +734,7 @@ class Update extends Setup
                             reference_language VARCHAR(5) NOT NULL,
                             title TEXT NULL,
                             description TEXT NULL,
+                            slug TEXT NULL,
                             created DATE NOT NULL DEFAULT GETDATE(),
                             PRIMARY KEY (id))',
                         Database::getTablePrefix()
@@ -762,6 +749,7 @@ class Update extends Setup
                             reference_language VARCHAR(5) NOT NULL,
                             title TEXT NULL,
                             description TEXT NULL,
+                            slug TEXT NULL,
                             created DATE NOT NULL DEFAULT (date(\'now\')),
                             PRIMARY KEY (id))',
                         Database::getTablePrefix()
@@ -776,13 +764,26 @@ class Update extends Setup
                             reference_language VARCHAR(5) NOT NULL,
                             title TEXT,
                             description TEXT,
+                            slug TEXT NULL,
                             created DATE NOT NULL DEFAULT CURRENT_DATE,
                             PRIMARY KEY (id))',
                         Database::getTablePrefix()
                     );
                     break;
             }
-            // Cleanup of old configuration items
+
+            // Configuration items
+            $this->configuration->update(['main.botIgnoreList' => 'nustcrape,webpost,GoogleBot,msnbot,crawler,scooter,
+            bravobrian,archiver,w3c,controler,wget,bot,spider,Yahoo! Slurp,htdig,gsa-crawler,AirControler,Uptime-Kuma,
+            facebookcatalog/1.0,facebookexternalhit/1.1 (+http://www.facebook.com/externalhit_uatext.php),
+            facebookexternalhit/1.1']);
+            $this->configuration->add('mail.noReplySenderAddress', '');
+            $this->configuration->add('records.allowedMediaHosts', 'www.youtube.com');
+            $this->configuration->add('seo.title', $this->configuration->get('main.titleFAQ'));
+            $this->configuration->add('seo.description', $this->configuration->get('main.metaDescription'));
+            $this->configuration->add('main.enablePrivacyLink', 'true');
+            $this->configuration->add('seo.glossary.title', '');
+            $this->configuration->add('seo.glossary.description', '');
             $this->configuration->delete('main.urlValidateInterval');
         }
     }

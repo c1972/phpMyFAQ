@@ -327,6 +327,7 @@ class Installer extends Setup
         'w3c,controler,wget,bot,spider,Yahoo! Slurp,htdig,gsa-crawler,AirControler,Uptime-Kuma,facebookcatalog/1.0,' .
         'facebookexternalhit/1.1 (+http://www.facebook.com/externalhit_uatext.php),facebookexternalhit/1.1',
         'main.enableCookieConsent' => 'true',
+        'main.enablePrivacyLink' => 'true',
 
         'records.numberOfRecordsPerPage' => '10',
         'records.numberOfShownNewsEntries' => '3',
@@ -394,6 +395,8 @@ class Installer extends Setup
         'seo.metaTagsPages' => 'index, follow',
         'seo.metaTagsAdmin' => 'noindex, nofollow',
         'seo.enableXMLSitemap' => 'true',
+        'seo.glossary.title' => '',
+        'seo.glossary.description' => '',
 
         'mail.noReplySenderAddress' => '',
         'mail.remoteSMTP' => 'false',
@@ -623,7 +626,7 @@ class Installer extends Setup
 
         if (!$this->system->checkInstallation()) {
             throw new Exception(
-                'phpMyFAQ is already installed! Please use the <a href="./update">update</a>.'
+                'phpMyFAQ is already installed! Please use the <a href="../update">update</a>.'
             );
         }
     }

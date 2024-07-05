@@ -56,10 +56,7 @@ class CategoryHelper extends Helper
 
         $i = 0;
         foreach ($this->Category->getCategoryTree() as $cat) {
-            $indent = '';
-            for ($j = 0; $j < $cat['indent']; ++$j) {
-                $indent .= '....';
-            }
+            $indent = str_repeat('....', $cat['indent']);
 
             $categories .= sprintf('<option value="%s"', $cat['id']);
 
@@ -274,11 +271,11 @@ class CategoryHelper extends Helper
             $groupId = $this->Category->getModeratorGroupId($category);
 
             $user->getUserById($userId);
-            $catOwnerEmail = $user->getUserData('email');
+            $emailCategoryOwner = $user->getUserData('email');
 
-            // Avoid to send multiple emails to the same owner
-            if (!empty($catOwnerEmail) && !isset($send[$catOwnerEmail])) {
-                $recipients[] = $catOwnerEmail;
+            // Avoid sending multiple emails to the same owner
+            if (!empty($emailCategoryOwner) && !isset($send[$emailCategoryOwner])) {
+                $recipients[] = $emailCategoryOwner;
             }
 
             if ($groupId > 0) {
@@ -286,7 +283,7 @@ class CategoryHelper extends Helper
                 foreach ($moderators as $moderator) {
                     $user->getUserById($moderator);
                     $moderatorEmail = $user->getUserData('email');
-                    // Avoid to send multiple emails to the same moderator
+                    // Avoid sending multiple emails to the same moderator
                     if (empty($moderatorEmail)) {
                         continue;
                     }

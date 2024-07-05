@@ -222,7 +222,7 @@ $PMF_LANG['ad_user_deleted'] = "Der Benutzer wurde erfolgreich gelöscht.";
 $PMF_LANG['ad_user_checkall'] = "Alle auswählen";
 
 // Beitragsverwaltung
-$PMF_LANG['ad_entry_aor'] = "FAQ Übersicht";
+$PMF_LANG['ad_entry_aor'] = "FAQ-Verwaltung";
 $PMF_LANG['ad_entry_id'] = "ID";
 $PMF_LANG['ad_entry_topic'] = "Frage";
 $PMF_LANG['ad_entry_action'] = "Aktion";
@@ -236,7 +236,7 @@ $PMF_LANG['ad_entry_category'] = "Kategorie";
 $PMF_LANG['ad_entry_active'] = "Aktiviert";
 $PMF_LANG['ad_entry_date'] = "Datum";
 $PMF_LANG["ad_entry_status"] = "Status der FAQ";
-$PMF_LANG['ad_entry_changed'] = "Was wurde geändert?";
+$PMF_LANG['ad_entry_changed'] = "Änderungen";
 $PMF_LANG['ad_entry_changelog'] = "Änderungen";
 $PMF_LANG['ad_entry_commentby'] = "Kommentar von";
 $PMF_LANG['ad_entry_comment'] = "Kommentare";
@@ -1318,12 +1318,6 @@ $LANG_CONF['upgrade.releaseEnvironment'] = ['select', 'Release-Umgebung'];
 $LANG_CONF['upgrade.dateLastChecked'] = ['print', 'Letzte Überprüfung nach Updates'];
 $PMF_LANG['upgradeControlCenter'] = 'Online Update';
 
-// added v4.0.0-alpha - 2023-07-19 by Jan
-$PMF_LANG['msgAddBookmark'] = 'Lesezeichen hinzufügen';
-$PMF_LANG['removeBookmark'] = 'Lesezeichen entfernen';
-$PMF_LANG['msgBookmarkAdded'] = 'Lesezeichen erfolgreich hinzugefügt!';
-$PMF_LANG['msgBookmarkRemoved'] = 'Lesezeichen erfolgreich entfernt!';
-
 // added v4.0.0-alpha - 2023-07-11 by Jan
 $PMF_LANG['headerCheckHealth'] = '1. Systemzustand prüfen';
 $PMF_LANG['headerCheckUpdates'] = '2. Suche nach Updates';
@@ -1353,10 +1347,10 @@ $PMF_LANG['msgReleaseEnvironment'] = 'Release-Umgebung: ';
 // added v4.0.0-alpha - 2023-07-19 by Jan
 $PMF_LANG['msgAddBookmark'] = 'Lesezeichen hinzufügen';
 $PMF_LANG['removeBookmark'] = 'Lesezeichen entfernen';
-$PMF_LANG['msgBookmarkAdded'] = 'Lesezeichen erfolgreich hinzugefügt!';
-$PMF_LANG['msgBookmarkRemoved'] = 'Lesezeichen erfolgreich entfernt!';
 $PMF_LANG['msgBookmarks'] = 'Lesezeichen';
 $PMF_LANG['msgMyBookmarks'] = 'Meine Lesezeichen';
+$PMF_LANG['msgBookmarkAdded'] = 'Lesezeichen erfolgreich hinzugefügt!';
+$PMF_LANG['msgBookmarkRemoved'] = 'Lesezeichen erfolgreich entfernt!';
 
 // added v4.0.0-alpha - 2023-09-20 by Jan
 $PMF_LANG['msgNoHashAllowed'] = "Die Frage darf '#' nicht enthalten.";
@@ -1370,7 +1364,7 @@ $PMF_LANG['msgGravatar'] = 'Bild von Gravatar';
 // added v4.0.0-alpha - 2023-12-27 by Jan
 $PMF_LANG['msgOrderStickyFaqsCustomDeactivated'] = 'Die benutzerdefinierte Sortierung von wichtigen FAQs ist in der Konfiguration deaktiviert. Wenn du diese Funktion nutzen möchtest, aktiviere sie in der <a class="alert-link" href="./?action=config">Konfiguration</a> -> FAQs.';
 $LANG_CONF['records.orderStickyFaqsCustom'] = ['checkbox', 'Benutzerdefinierte Sortierung von wichtigen FAQs'];
-$PMF_LANG['msgNoStickyFaqs'] = 'Du hast noch keine wichtigen FAQs. Gehe in die <a href="./?action=faqs-overview" class="alert-link">FAQ Übersicht</a>, um FAQs als wichtig zu markieren.';
+$PMF_LANG['msgNoStickyFaqs'] = 'Du hast noch keine wichtigen FAQs. Gehe in die <a href="./?action=faqs-overview" class="alert-link">FAQ-Verwaltung</a>, um FAQs als wichtig zu markieren.';
 
 // added v4.0.0-alpha - 2023-12-29 by Thorsten
 $LANG_CONF['main.enableCookieConsent'] = ['checkbox', 'Aktiviere Cookie Consent'];
@@ -1447,6 +1441,15 @@ $LANG_CONF['seo.description'] = ['area', 'SERP Beschreibung'];
 $LANG_CONF['records.allowedMediaHosts'] = ['area', 'Erlaubte externe Hosts für Medieninhalte (Mit Kommas trennen)'];
 $PMF_LANG['msgConfirmTwofactorConfig'] = 'Bist du sicher, dass du deine aktuelle Konfiguration der 2-Faktor-Authentifizierung löschen möchtest?';
 $PMF_LANG['msgGravatarNotConnected'] = 'Gravatar ist aktuell nicht aktiviert.';
-$PMF_LANG['msgRemoveTwofactorConfigSuccessfull'] = 'Das Löschen der aktuellen 2-Faktor-Konfiguration war erfolgreich.';
+$PMF_LANG['msgRemoveTwofactorConfigSuccessful'] = 'Das Löschen der aktuellen 2-Faktor-Konfiguration war erfolgreich.';
+$PMF_LANG['msgShareViaWhatsapp'] = 'Per WhatsApp empfehlen';
+$PMF_LANG['msgShareViaWhatsappText'] = 'Ich habe einen spannenden FAQ-Beitrag für dich entdeckt:';
+$PMF_LANG['msgError'] = 'Es ist ein Fehler aufgetreten.';
+$PMF_LANG['msgLinkToFAQ'] = 'Link zum FAQ';
+
+// added v4.0.0-alpha.3 - 2024-06-30 by Thorsten
+$LANG_CONF['main.enablePrivacyLink'] = ['checkbox', 'Aktiviere Link zur Datenschutzerklärung'];
+$LANG_CONF['seo.glossary.title'] = ['input', 'SERP Titel für Glossar'];
+$LANG_CONF['seo.glossary.description'] = ['area', 'SERP Beschreibung für Glossar'];
 
 return $PMF_LANG;

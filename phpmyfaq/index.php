@@ -45,7 +45,6 @@ use phpMyFAQ\Translation;
 use phpMyFAQ\User\CurrentUser;
 use phpMyFAQ\User\TwoFactor;
 use phpMyFAQ\User\UserAuthentication;
-use phpMyFAQ\Utils;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -335,7 +334,7 @@ $seoEntity->setReferenceLanguage($lang);
 //
 $faqSystem = new System();
 $faqLink = new Link($faqSystem->getSystemUri($faqConfig), $faqConfig);
-$currentPageUrl = Strings::htmlentities($faqLink->getCurrentUrl());
+$currentPageUrl = Strings::htmlspecialchars($faqLink->getCurrentUrl());
 
 //
 // Found a record ID?
@@ -349,7 +348,7 @@ if ($id !== 0) {
         ->setReferenceId($id);
     $seoData = $seo->get($seoEntity);
 
-    $title = ' - ' . $seoData->getTitle();
+    $title = $seoData->getTitle();
     $keywords = ',' . $faq->faqRecord['keywords'];
     $metaDescription = str_replace('"', '', $seoData->getDescription() ?? '');
     $url = sprintf(
@@ -385,7 +384,7 @@ if ($solutionId) {
         ->setReferenceLanguage($lang);
     $seoData = $seo->get($seoEntity);
 
-    $title = ' - ' . $seoData->getTitle();
+    $title = $seoData->getTitle();
     $keywords = ',' . $faq->getKeywords($id);
     $metaDescription = str_replace('"', '', $seoData->getDescription());
     $url = sprintf(
@@ -443,8 +442,16 @@ if (isset($cat) && ($cat !== 0) && ($id === 0) && isset($category->categoryName[
         ->setType(SeoType::CATEGORY)
         ->setReferenceId($cat);
     $seoData = $seo->get($seoEntity);
-    $title = ' - ' . $seoData->getTitle() ?? $category->categoryName[$cat]['name'];
+    $title = $seoData->getTitle() ?? $category->categoryName[$cat]['name'];
     $metaDescription = $seoData->getDescription() ?? $category->categoryName[$cat]['description'];
+}
+
+//
+// Glossary
+//
+if ('glossary' === $action) {
+    $title = $faqConfig->get('seo.glossary.title');
+    $metaDescription = $faqConfig->get('seo.glossary.description');
 }
 
 //
@@ -556,12 +563,11 @@ if ($faqConfig->isSignInWithMicrosoftActive()) {
 
 $tplMainPage = [
     'msgLoginUser' => $user->isLoggedIn() ? $user->getUserData('display_name') : Translation::get('msgLoginUser'),
-    'title' => Strings::htmlspecialchars($faqConfig->get('seo.title') . $title),
-    'baseHref' => Strings::htmlentities($faqSystem->getSystemUri($faqConfig)),
+    'title' => $title,
+    'baseHref' => Strings::htmlspecialchars($faqSystem->getSystemUri($faqConfig)),
     'version' => $faqConfig->getVersion(),
     'header' => Strings::htmlentities(str_replace('"', '', $faqConfig->getTitle())),
-    'metaTitle' => Strings::htmlentities(str_replace('"', '', $faqConfig->getTitle() . $title)),
-    'metaDescription' => Strings::htmlentities($metaDescription ?? $faqConfig->get('seo.description')),
+    'metaDescription' => Strings::htmlspecialchars($metaDescription ?? $faqConfig->get('seo.description')),
     'metaKeywords' => Strings::htmlentities($keywords),
     'metaPublisher' => Strings::htmlentities($faqConfig->get('main.metaPublisher')),
     'metaLanguage' => Translation::get('metaLanguage'),
@@ -625,6 +631,15 @@ if ('main' == $action || 'show' == $action) {
     );
 }
 
+if ($faqConfig->get('main.enablePrivacyLink')) {
+    $privacyLink = sprintf(
+        '<a class="pmf-nav-link-footer" target="_blank" href="%s">%s</a>',
+        Strings::htmlentities($faqConfig->get('main.privacyURL')),
+        Translation::get('msgPrivacyNote')
+    );
+} else {
+    $privacyLink = '';
+}
 
 $tplNavigation = [
     'backToHome' => '<a class="nav-link" href="./index.html">' . Translation::get('msgHome') . '</a>',
@@ -648,11 +663,7 @@ $tplNavigation = [
         '</a>',
     'msgGlossary' => '<a class="pmf-nav-link-footer" href="./glossary.html">' .
         Translation::get('ad_menu_glossary') . '</a>',
-    'privacyLink' => sprintf(
-        '<a class="pmf-nav-link-footer" target="_blank" href="%s">%s</a>',
-        Strings::htmlentities($faqConfig->get('main.privacyURL')),
-        Translation::get('msgPrivacyNote')
-    ),
+    'privacyLink' => $privacyLink,
     'cookiePreferences' => '<a id="showCookieConsent" class="pmf-nav-link-footer">'
         . Translation::get('cookiePreferences') . '</a>',
     'faqOverview' => '<a class="pmf-nav-link-footer" href="./overview.html">' .
@@ -662,7 +673,7 @@ $tplNavigation = [
     'breadcrumbHome' => '<a href="./index.html">' . Translation::get('msgHome') . '</a>',
 ];
 
-$tplNavigation['faqHome'] = Strings::htmlentities($faqConfig->getDefaultUrl());
+$tplNavigation['faqHome'] = Strings::htmlspecialchars($faqConfig->getDefaultUrl());
 $tplNavigation['activeSearch'] = ('search' == $action) ? 'active' : '';
 $tplNavigation['activeAllCategories'] = ('show' == $action) ? 'active' : '';
 $tplNavigation['activeAddContent'] = ('add' == $action) ? 'active' : '';
@@ -788,6 +799,12 @@ if ($response->getStatusCode() === Response::HTTP_NOT_FOUND || $action === '404'
 }
 
 $response->setContent($template->render());
+
+if ('logout' === $action) {
+    $response->headers->set('Cache-Control', 'no-cache, no-store, private');
+    $response->headers->set('Vary', 'Accept-Language, Accept-Encoding, Cookie');
+}
+
 $response->setCache([
     'must_revalidate' => false,
     'no_cache' => false,

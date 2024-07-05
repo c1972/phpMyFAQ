@@ -48,11 +48,12 @@ import {
   handleNews,
   handleEditNews,
   handleSaveFaqData,
+  handleUpdateQuestion,
 } from './content';
 import { handleUserList, handleUsers } from './user';
 import { handleGroups } from './group';
 import { handlePasswordStrength, handlePasswordToggle } from '../../../assets/src/utils';
-import { handleSessionTimeout, sidebarToggle } from './utils';
+import { handleSessionTimeout, initializeTooltips, sidebarToggle } from './utils';
 import { handleTruncateSearchTerms } from './statistics/search';
 
 document.addEventListener('DOMContentLoaded', async () => {
@@ -91,6 +92,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   handleAttachmentUploads();
   handleFileFilter();
   handleSaveFaqData();
+  handleUpdateQuestion();
   await handleFaqOverview();
 
   // Content → Comments
@@ -149,4 +151,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   await handleAddNews();
   await handleNews();
   await handleEditNews();
+
+  // Initialize tooltips everywhere
+  await initializeTooltips();
 });
